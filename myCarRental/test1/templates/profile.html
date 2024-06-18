@@ -1,0 +1,88 @@
+{% extends "./base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Profile Page</h1>
+
+    <div class="profile-section mb-4">
+        <h2>Personal Information</h2>
+        <p>Name: {{ user.name }}</p>
+        <p>Surname: {{ user.surname }}</p>
+    </div>
+
+    <div class="profile-section mb-4">
+        <h2>Rented Cars History</h2>
+        {% if rented_cars %}
+            <ul>
+                {% for rental in rented_cars %}
+                    <li>{{ rental.car.brand }} {{ rental.car.model }} - {{ rental.rental_city }} - ${{ rental.paid_price }} - {{ rental.rental_time }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No rented cars history.</p>
+        {% endif %}
+    </div>
+
+    <div class="profile-section mb-4">
+        <h2>My Liked Cars</h2>
+        {% if liked_cars %}
+            <div class="row">
+                {% for car in liked_cars %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <a href="{% url 'car_detail' car.id %}">
+                                {% if car.picture1 %}
+                                    <img src="{{ car.picture1.url }}" class="card-img-top" alt="{{ car.brand }} {{ car.model }}">
+                                {% endif %}
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                                <p class="card-text">Price: ${{ car.rental_price_per_day }}</p>
+                                <form action="{% url 'like_car' car.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Unlike</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No liked cars.</p>
+        {% endif %}
+    </div>
+
+    <div class="profile-section mb-4">
+        <h2>My Uploaded Cars</h2>
+        {% if uploaded_cars %}
+            <div class="row">
+                {% for car in uploaded_cars %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <a href="{% url 'car_detail' car.id %}">
+                                {% if car.picture1 %}
+                                    <img src="{{ car.picture1.url }}" class="card-img-top" alt="{{ car.brand }} {{ car.model }}">
+                                {% endif %}
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                                <p class="card-text">Price: ${{ car.rental_price_per_day }}</p>
+                                {% if car.owner == user %}
+                                    <form action="{% url 'delete_car' car.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No uploaded cars.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "./base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Available Cars for Rent</h1>
+    <div class="row">
+        {% for car in cars %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <a href="{% url 'car_detail' car.id %}">
+                        {% if car.picture1 %}
+                            <img src="{{ car.picture1.url }}" class="card-img-top" alt="{{ car.brand }} {{ car.model }}">
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                        <p class="card-text">Price: ${{ car.rental_price_per_day }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+        <p>No cars available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

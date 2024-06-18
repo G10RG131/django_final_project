@@ -1,0 +1,30 @@
+{% block content %}
+<div class="container mt-4">
+    <h2>My Liked Cars</h2>
+    {% if liked_cars %}
+        <div class="row">
+            {% for car in liked_cars %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <a href="{% url 'car_detail' car.id %}">
+                            {% if car.picture1 %}
+                                <img src="{{ car.picture1.url }}" class="card-img-top" alt="{{ car.brand }} {{ car.model }}">
+                            {% endif %}
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                            <p class="card-text">Price: ${{ car.rental_price_per_day }}</p>
+                            <form action="{% url 'like_car' car.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Unlike</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No liked cars.</p>
+    {% endif %}
+</div>
+{% endblock %}

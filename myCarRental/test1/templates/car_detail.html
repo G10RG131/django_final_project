@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ car.brand }} {{ car.model }} ({{ car.year }})</h1>
+    <div id="carImagesCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% if car.picture1 %}
+            <div class="carousel-item active">
+                <img src="{{ car.picture1.url }}" class="d-block w-100" alt="{{ car.brand }} {{ car.model }}">
+            </div>
+            {% endif %}
+            {% if car.picture2 %}
+            <div class="carousel-item {% if not car.picture1 %}active{% endif %}">
+                <img src="{{ car.picture2.url }}" class="d-block w-100" alt="{{ car.brand }} {{ car.model }}">
+            </div>
+            {% endif %}
+            {% if car.picture3 %}
+            <div class="carousel-item {% if not car.picture1 and not car.picture2 %}active{% endif %}">
+                <img src="{{ car.picture3.url }}" class="d-block w-100" alt="{{ car.brand }} {{ car.model }}">
+            </div>
+            {% endif %}
+        </div>
+        <a class="carousel-control-prev" href="#carImagesCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carImagesCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <h2>Details</h2>
+    <p><strong>Phone Number:</strong> {{ car.phone_number }}</p>
+    <p><strong>Brand:</strong> {{ car.brand }}</p>
+    <p><strong>Model:</strong> {{ car.model }}</p>
+    <p><strong>Year:</strong> {{ car.year }}</p>
+    <p><strong>Rental Price Per Day:</strong> ${{ car.rental_price_per_day }}</p>
+    <p><strong>Size:</strong> {{ car.size }}</p>
+    <p><strong>Transmission:</strong> {{ car.transmission }}</p>
+    <p><strong>City:</strong> {{ car.city }}</p>
+    <p><strong>Fuel Capacity:</strong> {{ car.fuel_capacity }} liters</p>
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'like_car' car.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">
+                {% if liked %}
+                    Unlike
+                {% else %}
+                    Like
+                {% endif %}
+            </button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to like this car.</p>
+    {% endif %}
+</div>
+{% endblock %}
